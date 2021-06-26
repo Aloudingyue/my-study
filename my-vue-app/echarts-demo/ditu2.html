@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<style>
+			body {
+				margin: 0;
+				padding: 0;
+			}
+			.chart {
+				width: 100vx;
+				height: 500px;
+			}
+			.charts {
+				width: 100vx;
+				height: 500px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="chart"></div>
+		<button id="button">返回上一级</button>
+		<button id="widthDrawBtn">撤回</button>
+		<div class="charts"></div>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script src="./echarts.min.js"></script>
+		<script>
+			const mapURL = {
+				china: './china.json',
+				chongqing: './chongqing.json',
+				sichuan: './sichuan.json'
+			};
+			const widthrawList = [];
+			function record(content) {
+				widthrawList.push(content);
+			}
+			async function run() {
+				//拿地图数据
+				const chinaMapRes = await axios.get(mapURL.china);
+				const chongqingMapRes = await axios.get(mapURL.chongqing);
+				const sichuanMapRes = await axios.get(mapURL.sichuan);
+				//注册地图
+				echarts.registerMap('CHINA', chinaMapRes.data);
+				echarts.registerMap('重庆市', chongqingMapRes.data);
+				echarts.registerMap('四川省', sichuanMapRes.data);
+				//获取容器
+				const container = document.querySelector('.chart');
+				//	const containers = document.querySelector('.charts');
+				//初始化echarts实例
+				const instance = echarts.init(container);
+				//	const instances = echarts.init(containers);
+				const option = {
+					geo: {
+						show: true,
+						map: 'CHINA',
+						selectedMode: 'single'
+					}
+				};
+				// const privinceMapopt = {
+				// 	geo: {
+				// 		show: true,
+				// 		map: '重庆市', //点击获取
+				// 		selectedMode: 'single'
+				// 	}
+				// };
+				//set option
+				instance.setOption(option);
+				//instances.setOption(privinceMapopt);
+				instance.on('geoselectchanged', e => {
+					record(option.geo.map);
+					option.geo.map = e.name;
+					instance.setOption(option, { notMerge: true });
+				});
+				const btn = document.querySelector('#button');
+				const widthDrawBtn = document.querySelector('#widthDrawBtn');
+				btn.addEventListener('click', () => {
+					if (option.geo.map === 'CHINA') {
+						alert('已经在中国地图');
+						return;
+					}
+					record(option.geo.map);
+					option.geo.map = 'CHINA';
+					instance.setOption(option, { notMerge: true });
+				});
+				//点击释放刚刚的记录， List[i]拿出来用，用了之后删除
+				widthDrawBtn.addEventListener('click', () => {
+					const lastIdx = widthrawList.length - 1;
+					const lastStep = widthrawList[lastIdx];
+					option.geo.map = lastStep;
+					lastStep && instance.setOption(option);
+					widthrawList.splice(lastIdx, 1);
+				});
+			}
+			run();
+		</script>
+	</body>
+</html>

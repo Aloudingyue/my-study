@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=<s>, initial-scale=1.0" />
+		<title>Document</title>
+		<style>
+			body {
+				margin: 0;
+				padding: 0;
+			}
+			.chart {
+				width: 100wx;
+				height: 500px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="chart"></div>
+		<!-- 在线地址 -->
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script src="./echarts.min.js"></script>
+		<script>
+			console.log(axios);
+			const mapDataURL = './china.json';
+			//发送请求
+			axios.get(mapDataURL).then(res => {
+				console.log(res);
+				const mapData = res.data;
+				echarts.registerMap('CHINA', mapData);
+				const container = document.querySelector('.chart');
+				const instance = echarts.init(container);
+				const option = {
+					visualMap: {
+						left: 'right',
+						min: 0,
+						max: 10,
+						inRange: {
+							color: [
+								'red',
+								'blue',
+								'green',
+								'yellow',
+								'gray',
+								'pink',
+								'#fee090',
+								'#fdae61',
+								'rgb(166,89,39)',
+								'#d73027'
+							]
+						},
+						text: ['High', 'Low'], // 文本，默认为数值文本
+						calculable: true
+					},
+					roam: true,
+					emphasis: {
+						label: {
+							focus: 'series',
+							show: true
+						}
+					},
+					series: [
+						{
+							type: 'map',
+							map: 'CHINA', //名字与上面相同
+							data: [
+								{
+									name: '河北省',
+									value: 1
+								},
+								{
+									name: '重庆市',
+									value: 2
+								},
+								{
+									name: '四川省',
+									value: 3
+								},
+								{
+									name: '北京市',
+									value: 4
+								},
+								{
+									name: '天津市',
+									value: 5
+								},
+								{
+									name: '上海市',
+									value: 6
+								},
+								{
+									name: '福建省',
+									value: 7
+								},
+								{
+									name: '浙江省',
+									value: 8
+								},
+								{
+									name: '黑龙江省',
+									value: 9
+								},
+								{
+									name: '海南省',
+									value: 10
+								}
+							]
+						}
+					]
+				};
+				instance.setOption(option);
+			});
+			//注册地图
+		</script>
+	</body>
+</html>

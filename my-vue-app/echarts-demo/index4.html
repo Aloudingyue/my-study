@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=<s>, initial-scale=1.0" />
+		<title>Document</title>
+		<style>
+			body {
+				margin: 0;
+				padding: 0;
+			}
+			.chart {
+				width: 100wx;
+				height: 500px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="chart"></div>
+		<!-- 在线地址 -->
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script src="./echarts.min.js"></script>
+		<script>
+			console.log(axios);
+			const mapDataURL = './chongqing.json';
+			//发送请求
+			axios.get(mapDataURL).then(res => {
+				console.log(res);
+				const mapData = res.data;
+				echarts.registerMap('CHONGQING', mapData);
+				const container = document.querySelector('.chart');
+				const instance = echarts.init(container);
+				const option = {
+					visualMap: {
+						left: 'right',
+						min: 1,
+						max: 6,
+						inRange: {
+							color: ['red', 'blue', 'green', 'pink', 'yellow', 'black']
+						},
+						text: ['High', 'Low'], // 文本，默认为数值文本
+						calculable: true
+					},
+					roam: true,
+					emphasis: {
+						label: {
+							focus: 'series',
+							show: true
+						}
+					},
+					series: [
+						{
+							type: 'map',
+							map: 'CHONGQING', //名字与上面相同
+							data: [
+								{
+									name: '南川区',
+									value: 1
+								},
+								{
+									name: '万州区',
+									value: 2
+								},
+								{
+									name: '涪陵区',
+									value: 3
+								},
+								{
+									name: '云阳县',
+									value: 4
+								},
+								{
+									name: '渝北区',
+									value: 5
+								}
+							]
+						}
+					]
+				};
+				instance.setOption(option);
+			});
+			//注册地图
+		</script>
+	</body>
+</html>

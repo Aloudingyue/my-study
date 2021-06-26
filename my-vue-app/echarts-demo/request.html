@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script src="./echarts.min.js"></script>
+		<script>
+			//请求数据
+			const mapDataURL = './china.json';
+			//axious.get(mapDataURL);
+			//两种方式请求数据
+			// axios({
+			// 	method: 'GET',
+			// 	Headers: {
+			// 		token: '1123'
+			// 	},
+			// 	params: {
+			// 		id: 1,
+			// 		username: 'loudingyue'
+			// 	}
+			// });
+			// axios({
+			// 	method: 'POST',
+			// 	data: {
+			// 		id: 1,
+			// 		username: 'zhouhaimei'
+			// 	}
+			// });
+			//获取数据
+			//es6 async & await
+			axios.get(mapDataURL).then(res => {
+				axios.get(mapDataURL).then(res1 => {
+					axios.get(mapDataURL).then(res2 => {
+						//同时获取三份数据
+					});
+				});
+			});
+			//必须最近一层函数是async函数、
+			async function req() {
+				const data = await axios.get(mapDataURL).then(res => res.data);
+				// const { data, msg } = await axios.get(mapDataURL);
+				const res = await axios.get(mapDataURL);
+				// const data = res.data;
+				// const msg = res.msg;
+				const res2 = await axios.get(mapDataURL);
+			}
+			req();
+			//错误处理在catch函数里写(catch里写箭头函数)
+		</script>
+	</body>
+</html>

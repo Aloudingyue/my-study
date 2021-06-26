@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<script src="echarts.min.js"></script>
+		<style>
+			body {
+				margin: 0;
+				padding: 0;
+			}
+			.chart {
+				width: 100vx;
+				height: 500px;
+			}
+			.charts {
+				width: 100vx;
+				height: 500px;
+			}
+			.chart1 {
+				width: 100vx;
+				height: 500px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="chart"></div>
+		<div class="charts"></div>
+		<div class="chart1"></div>
+
+		<script>
+			console.log(echarts);
+			const container = document.querySelector('.chart');
+			const instance = echarts.init(container);
+			const option = {
+				xAxis: {},
+				yAxis: {},
+				series: [
+					{
+						symbolSize: 20,
+						data: [
+							[10.0, 8.04],
+							[8.07, 6.95],
+							[13.0, 7.58],
+							[9.05, 8.81],
+							[11.0, 8.33],
+							[14.0, 7.66],
+							[13.4, 6.81],
+							[10.0, 6.33],
+							[14.0, 8.96],
+							[12.5, 6.82],
+							[9.15, 7.2],
+							[11.5, 7.2],
+							[3.03, 4.23],
+							[12.2, 7.83],
+							[2.02, 4.47],
+							[1.05, 3.33],
+							[4.05, 4.96],
+							[6.03, 7.24],
+							[12.0, 6.26],
+							[12.0, 8.84],
+							[7.08, 5.82],
+							[5.02, 5.68]
+						],
+						type: 'scatter'
+					}
+				]
+			};
+			instance.setOption(option);
+			const containers = document.querySelector('.charts');
+			const instances = echarts.init(containers);
+			const list = [];
+			for (let i = 0; i < 100; i++) {
+				const item = {
+					sex: 'female',
+					height: Math.ceil(Math.random() * 20 + 150),
+					weight: Math.ceil(Math.random() * 10 + 50),
+					age: Math.ceil(Math.random() * 30 + 20)
+				};
+				list.push(item);
+			}
+			for (let i = 0; i < 100; i++) {
+				const item = {
+					sex: 'male',
+					height: Math.ceil(Math.random() * 20 + 160),
+					weight: Math.ceil(Math.random() * 10 + 70),
+					age: Math.ceil(Math.random() * 30 + 20)
+				};
+				list.push(item);
+			}
+			console.log(list);
+			const options = {
+				xAxis: {
+					min: 'dataMin'
+				},
+				yAxis: {
+					min: 'dataMin'
+				},
+				series: [
+					{
+						type: 'scatter',
+						//气泡图除了x，y轴还需要另外一组数据来渲染气泡的大小，返回函数值，映射
+						symbolSize: function(data) {
+							//渲染的点的大小
+							return data[2] - 20;
+						},
+						emphasis: {
+							focus: 'series',
+							label: {
+								show: true,
+								formatter: function(param) {
+									return param.data[3];
+								},
+								position: 'top'
+							}
+						},
+						itemStyle: {
+							shadowBlur: 10, //阴影模糊的范围
+							shadowColor: 'rgba(120, 36, 50, 0.5)', //阴影颜色
+							shadowOffsetY: 5, //阴影的纵向量位移
+							color: {
+								type: 'radial',
+								x: 0.3,
+								y: 0.2,
+								r: 0.5,
+								colorStops: [
+									{
+										offset: 0,
+										color: 'white' // 0% 处的颜色
+									},
+									{
+										offset: 1,
+										color: 'rgb(48, 207, 180)' // 100% 处的颜色
+									}
+								],
+								global: false // 缺省为 false
+							}
+						},
+						// 	color: new echarts.graphic.RadialGradient(0.4, 0.3, 1, [
+						// 		{
+						// 			offset: 0, //从圆心
+						// 			color: 'rgb(251, 118, 123)'
+						// 		},
+						// 		{
+						// 			offset: 1, //到外部
+						// 			color: 'rgb(204, 46, 72)'
+						// 		}
+						// 	])
+						// },
+						data: list
+							.filter(item => {
+								return item.sex === 'female';
+							})
+							.map(item => {
+								return [item.height, item.weight, item.age];
+							})
+					},
+					{
+						type: 'scatter',
+						symbolSize: function(data) {
+							return data[2] - 20;
+						},
+						emphasis: {
+							focus: 'series',
+							label: {
+								show: true,
+								formatter: function(param) {
+									return param.data[3];
+								},
+								position: 'top'
+							}
+						},
+						itemStyle: {
+							shadowBlur: 10,
+							shadowColor: 'rgba(25, 100, 150, 0.5)',
+							shadowOffsetY: 5,
+							color: new echarts.graphic.RadialGradient(0.4, 0.3, 1, [
+								{
+									offset: 0,
+									color: 'rgb(129, 227, 238)'
+								},
+								{
+									offset: 1,
+									color: 'rgb(25, 183, 207)'
+								}
+							])
+						},
+						data: list
+							.filter(item => {
+								return item.sex === 'male';
+							})
+							.map(item => {
+								return [item.height, item.weight, item.age];
+							})
+					}
+				]
+			};
+			instances.setOption(options);
+		</script>
+	</body>
+</html>
